@@ -13,7 +13,7 @@ public class UserDAO {
         String sql = "INSERT INTO users (name, email) VALUES (?, ?)";
 
         try (Connection conn = DBConnection.getConnection()) {
-            PreparedStatement preparedStatement = conn.prepareStatement(sql);
+            PreparedStatement preparedStatement = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getEmail());

@@ -7,8 +7,8 @@ import java.util.List;
 public class Group {
     private int id;
     private String name;
-    private final ArrayList<User> members;
-    private final ArrayList<Expense> expenses;
+    private ArrayList<User> members;
+    private ArrayList<Expense> expenses;
 
     public Group(String name){
         this.id = 0;
@@ -20,6 +20,12 @@ public class Group {
     public Group(int id, String name){
         this(name);
         this.id = id;
+    }
+
+    public Group(int id, String name, ArrayList<Expense> expenses, ArrayList<User> members) {
+        this(id, name);
+        this.expenses = expenses;
+        this.members = members;
     }
 
     public String getName(){ return name; }
@@ -41,7 +47,6 @@ public class Group {
                 .anyMatch(u -> u.getName().equalsIgnoreCase(name));
     }
 
-    // To change: the method should return boolean and not print anything
     public boolean addMember(User member) {
         if(member == null) {
             throw new IllegalArgumentException("Member required");
@@ -53,6 +58,16 @@ public class Group {
         }
         members.add(member);
         return true;
+    }
+
+    public void addMembers(List<User> members) {
+        if(members == null || members.isEmpty()) {
+            throw new IllegalArgumentException("Members list cannot be null or empty.");
+        }
+
+        for(User member: members) {
+            addMember(member);
+        }
     }
 
     public void addExpense(Expense expense){

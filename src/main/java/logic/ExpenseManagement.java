@@ -174,6 +174,7 @@ public final class ExpenseManagement {
     }
 
     public static Map<User, Long> calculateBalances(Group group) {
+        System.out.println(group);
         HashMap<User, Long> balances = new HashMap<>();
 
         if(group == null || group.getExpenses().isEmpty()) {
