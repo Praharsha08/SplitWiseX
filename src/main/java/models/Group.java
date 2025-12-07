@@ -35,18 +35,6 @@ public class Group {
 
     public void setId(int id) {this.id = id;}
 
-    public User findMemberByName(String name) {
-        return members.stream()
-                .filter(u -> u.getName().equalsIgnoreCase(name))
-                .findFirst()
-                .orElse(null);
-    }
-
-    public boolean hasMember(String name){
-        return members.stream()
-                .anyMatch(u -> u.getName().equalsIgnoreCase(name));
-    }
-
     public boolean addMember(User member) {
         if(member == null) {
             throw new IllegalArgumentException("Member required");
@@ -60,22 +48,8 @@ public class Group {
         return true;
     }
 
-    public void addMembers(List<User> members) {
-        if(members == null || members.isEmpty()) {
-            throw new IllegalArgumentException("Members list cannot be null or empty.");
-        }
-
-        for(User member: members) {
-            addMember(member);
-        }
-    }
-
     public void addExpense(Expense expense){
         expenses.add(expense);
-    }
-
-    public void rename(String name){
-        this.name = name;
     }
 
     public String toString(){

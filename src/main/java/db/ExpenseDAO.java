@@ -74,48 +74,4 @@ public class ExpenseDAO {
             }
         }
     }
-
-    public static List<Expense> findByGroupId(int groupId) throws UserException, RuntimeException {
-        String sql = "SELECT * FROM expenses WHERE group_id = ?";
-        List<Expense> expenses = new ArrayList<>();
-
-        try(Connection conn = DBConnection.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, groupId);
-
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                int expenseId = rs.getInt("id");
-                int payerId = rs.getInt("payer_id");
-                long amountCents = rs.getLong("amount");
-                String currencyCode = rs.getString("currency").toUpperCase();
-                String description = rs.getString("description");
-                Date sqlDate = rs.getDate("expense_date");
-
-                User payer = UserDAO.findById(payerId);
-
-                List<User> participants = findParticipantsByExpenseId(expenseId);
-
-                Expense expense = new Expense (
-                        expenseId,
-                        groupId,
-                        payer,
-                        new Money(amountCents, CurrencyCode.valueOf(currencyCode)),
-                        participants,
-                        sqlDate.toLocalDate(),
-                        description
-                );
-
-                expenses.add(expense);
-            }
-
-            return expenses;
-        } catch (SQLException e) {
-            throw new RuntimeException("Error loading expenses", e);
-        }
-    }
-
-    private static List<User> findParticipantsByExpenseId(int expenseId) {
-        return new ArrayList<>();
-    }
 }

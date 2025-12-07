@@ -56,24 +56,6 @@ public class UserDAO {
         }
     }
 
-    public static User findById(int userId) throws UserException, RuntimeException {
-        String sql = "SELECT * FROM users WHERE id = ?";
-
-        try (Connection conn = DBConnection.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(sql);
-            statement.setInt(1, userId);
-            ResultSet rs = statement.executeQuery();
-
-            if(!rs.next()) {
-                throw new UserException("User with id [" + userId + "] not found.");
-            }
-
-            return new User(rs.getInt("id"), rs.getString("name"), rs.getString("email"));
-        } catch (SQLException e) {
-            throw new RuntimeException("Server Error: " + e.getMessage());
-        }
-    }
-
     public static List<User> findAllUsers() throws RuntimeException {
         String sql = "SELECT * FROM users";
         List<User> users = new ArrayList<>();

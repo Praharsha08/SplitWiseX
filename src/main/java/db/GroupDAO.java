@@ -52,6 +52,21 @@ public class GroupDAO {
         }
     }
 
+    public static boolean addMemberToGroup(int groupId, int userId) throws RuntimeException {
+        String sql = "INSERT INTO group_members (group_id, user_id) VALUES (?, ?)";
+
+        try (Connection conn = DBConnection.getConnection()) {
+            PreparedStatement statement = conn.prepareStatement(sql);
+            statement.setInt(1, groupId);
+            statement.setInt(2, userId);
+
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error adding member to group: " + e.getMessage());
+        }
+    }
+
     public static Group findGroup(String groupName) throws GroupNotFoundException {
 
         String sql = "SELECT * FROM `groups` " +
@@ -140,7 +155,7 @@ public class GroupDAO {
                         LocalDate date = rs.getDate("expense_date").toLocalDate();
                         String description = rs.getString("description");
 
-                        expense = new Expense(expenseId, payer, amount, new ArrayList<>(), date, description);
+                        expense = new Expense(expenseId, groupId, payer, amount, new ArrayList<>(), date, description);
 
                         expenseMap.put(expenseId, expense);
                     }

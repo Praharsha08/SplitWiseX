@@ -1,10 +1,10 @@
 package ui;
 
-import db.UserDAO;
 import exceptions.GroupNotFoundException;
 import exceptions.UserException;
 import logic.ExpenseManagement;
 import models.CurrencyCode;
+import models.Expense;
 import models.Group;
 import models.User;
 
@@ -50,6 +50,9 @@ public class MenuController {
                 case 7:
                     handleShowBalances();
                     break;
+                case 8:
+                    handleShowHistory();
+                    break;
                 case 9:
                     System.out.println("Exiting application...");
                     isRunning = false;
@@ -68,6 +71,7 @@ public class MenuController {
         System.out.println("5. List groups");
         System.out.println("6. Add expense to group");
         System.out.println("7. Show group balance");
+        System.out.println("8. Show expense history");
         System.out.println("9. Exit");
         System.out.println("\nEnter your choice: ");
     }
@@ -231,7 +235,7 @@ public class MenuController {
             return;
         }
 
-        String symbol = group.getExpenses().getFirst().getAmount().getCurrency().name() + " ";
+        String symbol = group.getExpenses().get(0).getAmount().getCurrency().name() + " ";
         for (Map.Entry<User, Long> balanceEntry : balances.entrySet()) {
             long userBalance = balanceEntry.getValue();
             User member = balanceEntry.getKey();
@@ -246,6 +250,43 @@ public class MenuController {
                     symbol,
                     Math.abs(displayAmount));
         }
+    }
+
+    private void handleShowHistory(){
+        Group group = promptForGroup();
+        if(group == null) {
+            System.out.println("Operation canceled.");
+            return;
+        }
+
+        List<Expense> expenses = group.getExpenses();
+        if(expenses.isEmpty()) {
+            System.out.println("No expenses recorded for this group yet.");
+            return;
+        }
+
+        System.out.println("\n--- Expenses History ---\n");
+        System.out.printf("%-5s | %-12s | %-20s | %-15s | %s%n",
+                "ID", "Date", "Description", "Amount", "Payer");
+
+        for(Expense e: expenses) {
+            System.out.printf("%-5d | %-12s | %-20s | %-15.2f | %s%n",
+                    e.getId(),
+                    e.getDate(),
+                    truncate(e.getDescription(), 20),
+                    e.getAmount().getAmount() / 100.0,
+                    e.getPayer().getName()
+            );
+        }
+
+        System.out.println("-------------------------------------");
+    }
+
+    private String truncate(String str, int width) {
+        if(str.length() > width) {
+            return str.substring(0, width - 3) + "...";
+        }
+        return str;
     }
 
     private Group promptForGroup() {

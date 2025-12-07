@@ -79,6 +79,22 @@ Enter your choice: 3
 * **JDBC** - Low-level database connectivity.
 * **MySQL** - Relational database management.
 
+## 🔮 Future Roadmap & Improvements
+This project represents the Core Logic (MVP) of the expense splitting engine. Future development cycles will focus on data lifecycle management and external integrations:
+
+* **📉 Debt Settlement System:**
+    * Implement a `Transaction` entity to record payments between users (e.g., "Alice paid Bob $50").
+    * Update the balance algorithm to deduct these settlements from the total debt.
+* **🗑️ Data Archiving (Soft Delete):**
+    * Instead of hard deletion (which risks Foreign Key constraints on historical expenses), implement a `is_active` flag for Users and Groups.
+    * This ensures historical data remains accurate even if a user leaves the platform.
+* **💱 Real-Time Currency Conversion:**
+    * Integrate with an external API (e.g., *Open Exchange Rates*) to fetch live values.
+    * Allow groups to view their total outstanding balance normalized to a single base currency (e.g., convert all EUR expenses to USD for the final report).
+* **🌐 REST API Migration:**
+    * Refactor the current CLI (Command Line Interface) layer into a **Spring Boot** web service.
+    * Expose JSON endpoints to support a future React or Mobile frontend.
+
 ## 👤 Author
 **Lior Karayev**
 * LinkedIn: [https://www.linkedin.com/in/lior-karaev-00ba772ab/](https://www.linkedin.com/in/lior-karaev-00ba772ab/)

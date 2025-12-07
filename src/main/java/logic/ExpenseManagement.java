@@ -120,17 +120,7 @@ public final class ExpenseManagement {
         }
 
         if(group.addMember(user)) {
-            String sql = "INSERT INTO group_members VALUES (?, ?)";
-
-            try(Connection conn = DBConnection.getConnection()) {
-                PreparedStatement preparedStatement = conn.prepareStatement(sql);
-                preparedStatement.setInt(1, group.getId());
-                preparedStatement.setInt(2, user.getId());
-                int rowsAffected = preparedStatement.executeUpdate();
-                return rowsAffected != 0;
-            } catch (SQLException e) {
-                throw new RuntimeException("Server Error: " + e.getMessage());
-            }
+            return GroupDAO.addMemberToGroup(group.getId(), user.getId());
         }
 
         return false;
