@@ -39,3 +39,6 @@ bin/
 # === OS junk ===
 .DS_Store
 Thumbs.db
+
+# === Config ===
+src/main/resources/config.properties
