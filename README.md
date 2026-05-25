@@ -1,101 +1,197 @@
-# [ Project Name: Smart Expense Splitter]
-> A robust Java application for managing group expenses, tracking debts, and calculating settlements using raw JDBC and MySQL.
+# SplitWiseX 💸
 
-![Project Status](https://img.shields.io/badge/status-active-brightgreen)
-![Java](https://img.shields.io/badge/Java-17%2B-orange)
-![MySQL](https://img.shields.io/badge/Database-MySQL-blue)
+A Java-based expense sharing and balance tracking application built using Core Java, JDBC, MySQL, and Swing GUI.
 
-## 📖 Overview
-This application solves the common problem of splitting bills among friends. It allows users to create groups, add expenses in multiple currencies, and automatically tracks who paid what.
+SplitWiseX helps groups manage shared expenses, calculate balances automatically, and keep track of expense history in an organized way.
 
-Unlike standard ORM-based solutions, this project demonstrates a **deep understanding of SQL optimization**, utilizing complex joins and custom data mapping to ensure high performance.
+---
 
-## ✨ Key Features
-* **Group Management:** Create groups and manage members.
-* **Expense Tracker:** Support for expenses with single payers and multiple participants.
-* **Debt Calculation:** Automatically calculates how much each participant owes.
-* **Smart Data Retrieval:** Optimized algorithms to fetch complex hierarchical data.
+## 🚀 Features
 
-## ⚙️ Technical Highlights (The "Why")
-This project was built to demonstrate proficiency in **Backend Engineering** and **Database Optimization**.
+* 👤 User Management
 
-### 🏗️ Solving the "N+1 Selects" problem
-A common pitfall in retrieving hierarchical data (Groups -> Expenses -> Participants) is the "N+1 Problem," where the application executes one query for the parent and separate queries for every child record.
+  * Create and manage users
 
-**My Solution:**
-I implemented a **Single-Query Architecture** in the Data Access Object (DAO).
-* **SQL:** utilized `LEFT JOIN`s to fetch Expenses, Payers, and Participants in one go.
-* **Java:** Designed a custom mapping algorithm using `HashMap` and object references to reconstruct the `Expense` and `Participant` objects from the flat `ResultSet` without data duplication.
+* 👥 Group Management
 
-## 🗄️ Database Schema
-The application uses a normalized relational database:
-* **Users:** Stores generic user info.
-* **Groups:** Stores group metadata.
-* **Expenses:** Linked to group and a specific payer.
-* **Expense_Participants:** A junction table linking Expenses to Users (Participants).
-* **Group_Members:** A junction table linking Groups to Users (Members).
+  * Create groups
+  * Add members to groups
 
-![Database ER Diagram](assets/erd_diagram.png)
+* 💰 Expense Tracking
 
-## 🚀 Getting Started:
+  * Add expenses with:
 
-### Prerequisites:
-* Java Development Kit (JDK) 11 or higher.
-* MySQL Server (Local or Docker container).
-* IDE (IntelliJ, Eclipse, etc.).
+    * payer
+    * participants
+    * amount
+    * description
+    * currency
 
-### Installation:
-1. **Clone the repository**
-   ```bash
-   git clone [https://github.com/Lior-Karayev/SmartExpenseSplitter.git](https://github.com/Lior-Karayev/SmartExpenseSplitter.git)
-   ```
-2. **Setup the Database**
-   * Run the `schema.sql` script located in `/sql` folder to create the tables.
-   * Create `config.properties` file in the root folder, copy the content from `config.properties.example`, and fill your DB credentials.
-3. **Run the Application:**
-   * Run the `Main.java` file to start console interface.
+* ⚖️ Smart Balance Calculation
 
-## 📝 Usage Example
+  * Automatically calculates:
+
+    * who owes whom
+    * how much should be settled
+
+* 📜 Expense History
+
+  * View all expenses for a group
+
+* 🖥️ Swing GUI Support
+
+  * Basic desktop interface using Java Swing
+
+---
+
+# 🛠️ Tech Stack
+
+| Technology | Usage                  |
+| ---------- | ---------------------- |
+| Java       | Core application logic |
+| JDBC       | Database connectivity  |
+| MySQL      | Relational database    |
+| Swing      | Desktop GUI            |
+| Gradle     | Build automation       |
+
+---
+
+# 🧠 Core Concepts Used
+
+* Object-Oriented Programming (OOP)
+* DAO Design Pattern
+* JDBC Connectivity
+* Exception Handling
+* SQL Joins
+* Collections Framework
+* Layered Architecture
+
+---
+
+# 🗄️ Database Design
+
+The application uses multiple relational tables:
+
+* `users`
+* `groups`
+* `expenses`
+* `expense_participants`
+* `group_members`
+
+Foreign key relationships are used to maintain data consistency.
+
+---
+
+# 📂 Project Structure
+
 ```text
-Welcome to Smart Expense Splitter.
-----------------------------------
-1. Create User
-2. Create Group
-3. Add member to group
-4. List users
-5. List groups
-6. Add expense to group
-7. Show group balance
-9. Exit
-Enter your choice: 3
-
-> Enter group name: Vacation 2024
-> Group created: Vacation 2024
-> ...
+src/main/java
+│
+├── app
+│   └── Main.java
+│
+├── db
+│   ├── DBConnection.java
+│   ├── ExpenseDAO.java
+│   ├── GroupDAO.java
+│   └── UserDAO.java
+│
+├── exceptions
+│   ├── ConsoleInputException.java
+│   ├── GroupException.java
+│   ├── GroupNotFoundException.java
+│   └── UserException.java
+│
+├── gui
+│   └── MainFrame.java
+│
+├── logic
+│   ├── ExpenseManagement.java
+│   └── SplitUtil.java
+│
+├── models
+│   ├── CurrencyCode.java
+│   ├── Expense.java
+│   ├── Group.java
+│   ├── Money.java
+│   └── User.java
+│
+└── ui
+    ├── ConsoleUI.java
+    └── MenuController.java
 ```
 
-## 🛠️ Built With
-* **Java** - Core application logic.
-* **JDBC** - Low-level database connectivity.
-* **MySQL** - Relational database management.
+---
 
-## 🔮 Future Roadmap & Improvements
-This project represents the Core Logic (MVP) of the expense splitting engine. Future development cycles will focus on data lifecycle management and external integrations:
+# ⚙️ Installation & Setup
 
-* **📉 Debt Settlement System:**
-    * Implement a `Transaction` entity to record payments between users (e.g., "Alice paid Bob $50").
-    * Update the balance algorithm to deduct these settlements from the total debt.
-* **🗑️ Data Archiving (Soft Delete):**
-    * Instead of hard deletion (which risks Foreign Key constraints on historical expenses), implement a `is_active` flag for Users and Groups.
-    * This ensures historical data remains accurate even if a user leaves the platform.
-* **💱 Real-Time Currency Conversion:**
-    * Integrate with an external API (e.g., *Open Exchange Rates*) to fetch live values.
-    * Allow groups to view their total outstanding balance normalized to a single base currency (e.g., convert all EUR expenses to USD for the final report).
-* **🌐 REST API Migration:**
-    * Refactor the current CLI (Command Line Interface) layer into a **Spring Boot** web service.
-    * Expose JSON endpoints to support a future React or Mobile frontend.
+## 1️⃣ Clone Repository
 
-## 👤 Author
-**Lior Karayev**
-* LinkedIn: [https://www.linkedin.com/in/lior-karaev-00ba772ab/](https://www.linkedin.com/in/lior-karaev-00ba772ab/)
-* GitHub: [https://github.com/Lior-Karayev](https://github.com/Lior-Karayev)
+```bash
+git clone https://github.com/Praharsha08/SplitWiseX.git
+```
+
+---
+
+## 2️⃣ Setup MySQL Database
+
+Run the SQL script located inside:
+
+```text
+/sql/schema.sql
+```
+
+This creates all required tables.
+
+---
+
+## 3️⃣ Configure Database Credentials
+
+Update the database configuration inside:
+
+```text
+src/main/resources/config.properties
+```
+
+Add:
+
+* database URL
+* username
+* password
+
+---
+
+## 4️⃣ Run Application
+
+```bash
+./gradlew run
+```
+
+---
+
+# 📸 Application Functionalities
+
+* Create User
+* Create Group
+* Add Members
+* Add Expenses
+* Show Group Balances
+* View Expense History
+
+---
+
+# 🔮 Future Improvements
+
+* Spring Boot REST API
+* React Frontend
+* Authentication System
+* Cloud Deployment
+* Expense Settlement Feature
+* Real-Time Currency Conversion
+
+---
+
+# 👨‍💻 Author
+
+**Praharsha**
+
