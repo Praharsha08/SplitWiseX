@@ -163,33 +163,50 @@ public final class ExpenseManagement {
         group.addExpense(expense);
     }
 
-    public static Map<User, Long> calculateBalances(Group group) {
-        System.out.println(group);
-        HashMap<User, Long> balances = new HashMap<>();
+   public static Map<User, Double> calculateBalances(Group group) {
 
-        if(group == null || group.getExpenses().isEmpty()) {
-            return balances;
-        }
+    HashMap<User, Double> balances = new HashMap<>();
 
-
-
-        for(Expense expense: group.getExpenses()) {
-            User payer = expense.getPayer();
-
-            long totalAmount = expense.getAmount().getAmount();
-            balances.merge(payer, totalAmount, Long::sum);
-
-            List<User> participants = expense.getParticipants();
-            List<Money> shares = SplitUtil.splitEqual(expense.getAmount(), participants.size());
-
-            for(int i = 0; i < participants.size(); i++) {
-                User participant = participants.get(i);
-                long shareAmount = shares.get(i).getAmount();
-
-                balances.merge(participant, -shareAmount, Long::sum);
-            }
-        }
-
+    if(group == null || group.getExpenses().isEmpty()) {
         return balances;
     }
+
+    for(Expense expense : group.getExpenses()) {
+
+        User payer = expense.getPayer();
+
+        double totalAmount = expense.getAmount().getAmount() / 100.0;
+
+        List<User> participants = expense.getParticipants();
+
+        double splitAmount = totalAmount / participants.size();
+
+        for(User participant : participants) {
+
+            if(participant.getId() != payer.getId()) {
+
+                System.out.println(
+                        participant.getName()
+                        + " owes "
+                        + payer.getName()
+                        + " "
+                        + expense.getAmount().getCurrency().getSymbol()
+                        + String.format("%.2f", splitAmount)
+                );
+
+                balances.put(
+                        participant,
+                        balances.getOrDefault(participant, 0.0) - splitAmount
+                );
+
+                balances.put(
+                        payer,
+                        balances.getOrDefault(payer, 0.0) + splitAmount
+                );
+            }
+        }
+    }
+
+    return balances;
+}
 }

@@ -228,27 +228,11 @@ public class MenuController {
         }
 
         System.out.println("\n--- Calculating balances ---");
-        Map<User, Long> balances = ExpenseManagement.calculateBalances(group);
+        Map<User, Double> balances = ExpenseManagement.calculateBalances(group);
 
         if (balances.isEmpty()) {
             System.out.println("No expenses found for this group.");
             return;
-        }
-
-        String symbol = group.getExpenses().get(0).getAmount().getCurrency().name() + " ";
-        for (Map.Entry<User, Long> balanceEntry : balances.entrySet()) {
-            long userBalance = balanceEntry.getValue();
-            User member = balanceEntry.getKey();
-
-            double displayAmount = userBalance / 100.0;
-
-            char sign = displayAmount >= 0 ? '+' : '-';
-
-            System.out.printf("[%s]: %c%s%.2f%n",
-                    member.getName(),
-                    sign,
-                    symbol,
-                    Math.abs(displayAmount));
         }
     }
 

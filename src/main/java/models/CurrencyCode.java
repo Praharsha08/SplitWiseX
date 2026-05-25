@@ -1,7 +1,7 @@
 package models;
 
 public enum CurrencyCode {
-    ILS("₪"),
+    INR("Rs."),
     USD("$"),
     EUR("€");
 

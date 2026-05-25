@@ -25,9 +25,13 @@ public class GroupDAO {
                     group.setId(rs.getInt(1));
                 }
             }
-        } catch (SQLException e) {
-            throw new RuntimeException("Server Error: " + e.getMessage());
-        }
+        } catch(SQLException e) {
+    if(e.getMessage().contains("Duplicate")) {
+        throw new RuntimeException("User already exists in group.");
+    }
+
+    throw new RuntimeException("Error adding member to group: " + e.getMessage());
+}
     }
 
     public static List<Group> findAllGroups() throws RuntimeException {
